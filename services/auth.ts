@@ -1,0 +1,130 @@
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut as firebaseSignOut,
+  onAuthStateChanged,
+  User as FirebaseUser,
+  sendPasswordResetEmail,
+  updateProfile,
+} from 'firebase/auth';
+import { auth } from '../config/firebase';
+
+export interface User {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+  phoneNumber: string | null;
+}
+
+/**
+ * Register a new user with email and password
+ */
+export const registerUser = async (
+  email: string,
+  password: string,
+  displayName?: string
+): Promise<FirebaseUser> => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    
+    // Update profile with display name if provided
+    if (displayName && userCredential.user) {
+      await updateProfile(userCredential.user, { displayName });
+    }
+    
+    return userCredential.user;
+  } catch (error: any) {
+    console.error('Registration error:', error);
+    throw new Error(error.message || 'Failed to register user');
+  }
+};
+
+/**
+ * Sign in existing user
+ */
+export const signIn = async (email: string, password: string): Promise<FirebaseUser> => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return userCredential.user;
+  } catch (error: any) {
+    console.error('Sign in error:', error);
+    throw new Error(error.message || 'Failed to sign in');
+  }
+};
+
+/**
+ * Sign out current user
+ */
+export const signOut = async (): Promise<void> => {
+  try {
+    await firebaseSignOut(auth);
+  } catch (error: any) {
+    console.error('Sign out error:', error);
+    throw new Error(error.message || 'Failed to sign out');
+  }
+};
+
+/**
+ * Get current authenticated user
+ */
+export const getCurrentUser = (): Promise<FirebaseUser | null> => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (user: FirebaseUser | null) => {
+        unsubscribe();
+        resolve(user);
+      },
+      reject
+    );
+  });
+};
+
+/**
+ * Listen to auth state changes
+ */
+export const onAuthChange = (callback: (user: User | null) => void) => {
+  return onAuthStateChanged(auth, (firebaseUser: FirebaseUser | null) => {
+    if (firebaseUser) {
+      const user: User = {
+        uid: firebaseUser.uid,
+        email: firebaseUser.email,
+        displayName: firebaseUser.displayName,
+        photoURL: firebaseUser.photoURL,
+        phoneNumber: firebaseUser.phoneNumber,
+      };
+      callback(user);
+    } else {
+      callback(null);
+    }
+  });
+};
+
+/**
+ * Send password reset email
+ */
+export const resetPassword = async (email: string): Promise<void> => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+  } catch (error: any) {
+    console.error('Password reset error:', error);
+    throw new Error(error.message || 'Failed to send password reset email');
+  }
+};
+
+/**
+ * Get Firebase ID token for API authentication
+ */
+export const getIdToken = async (): Promise<string | null> => {
+  try {
+    const user = auth.currentUser;
+    if (!user) return null;
+    
+    const token = await user.getIdToken();
+    return token;
+  } catch (error) {
+    console.error('Failed to get ID token:', error);
+    return null;
+  }
+};

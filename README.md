@@ -1,257 +1,150 @@
-# K - Full Stack Mobile App 🚀
+# AuthoSec Mobile App
 
-A full-stack mobile application with **Expo React Native** frontend and **Next.js** backend.
+Complete React Native mobile application with Clerk authentication and dual QR transaction system.
 
-## � Project Overview
+## Features Implemented
 
-This project consists of two main parts:
+### ✅ Authentication
+- **Clerk Integration**: Full authentication with email/password
+- **Sign In/Sign Up**: Complete flows with email verification
+- **Protected Routes**: Auto-redirect based on auth state
+- **Secure Token Storage**: Uses expo-secure-store
 
-1. **Mobile App** (Expo React Native) - iOS, Android, and Web
-2. **Backend API** (Next.js + Prisma + PostgreSQL) - RESTful API server
+### ✅ Main Screens
+- **Home**: Dashboard with quick actions and transaction overview
+- **Transactions**: List view with empty state
+- **Profile**: User profile with settings and sign-out
 
-```
-┌─────────────────┐
-│   Mobile App    │  ← Expo React Native + TypeScript
-│   (Expo)        │
-└────────┬────────┘
-         │
-         │ HTTP/REST
-         │
-┌────────▼────────┐
-│   Backend API   │  ← Next.js + Prisma ORM
-│   (Next.js)     │
-└────────┬────────┘
-         │
-         │ SQL
-         │
-┌────────▼────────┐
-│   PostgreSQL    │  ← Supabase Database
-│   (Supabase)    │
-└─────────────────┘
-```
+### ✅ Transaction Flow
+- **Initiate Transaction**: Form to start new payment
+- **QR Scanner**: Camera-based QR code scanning with permissions
+- **Navigation**: Modal-based transaction screens
 
-## 🚀 Quick Start
+## Tech Stack
 
-### Option 1: Automated Setup (Windows)
+- **Framework**: Expo 54 / React Native 0.81
+- **Navigation**: Expo Router (file-based routing)
+- **Authentication**: Clerk Expo SDK
+- **Camera**: expo-camera for QR scanning
+- **State Management**: React hooks
+- **Styling**: StyleSheet API with dark theme
 
-```powershell
-# Setup and start backend
-.\backend\setup.ps1
-```
+## Setup
 
-### Option 2: Manual Setup
-
-#### Backend Setup
-
+1. **Install Dependencies**:
 ```bash
-# Navigate to backend
-cd backend
-
-# Install dependencies
 npm install
-
-# Setup database
-npm run prisma:generate
-npm run prisma:push
-
-# Start development server
-npm run dev
 ```
 
-Backend will run on: **http://localhost:3001**
+2. **Configure Environment**:
+The `.env` file is already configured with:
+- `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`: Clerk auth key
+- `EXPO_PUBLIC_API_BASE_URL`: Backend API URL
 
-#### Mobile App Setup
-
+3. **Run the App**:
 ```bash
-# In root directory
-npm install
-
-# Start Expo dev server
+# Start Metro bundler
 npm start
+
+# Run on Android
+npm run android
+
+# Run on iOS
+npm run ios
 ```
 
-Choose your platform:
-- Press `i` for iOS simulator
-- Press `a` for Android emulator
-- Press `w` for web browser
-
-## 📁 Project Structure
+## Project Structure
 
 ```
-k/
-├── backend/                 # Next.js Backend API
-│   ├── src/
-│   │   ├── app/api/        # API Routes
-│   │   └── lib/            # Utilities
-│   ├── prisma/             # Database Schema
-│   └── README.md           # Backend Documentation
-│
-├── app/                    # Expo App (Mobile)
-│   ├── (tabs)/            # Tab Navigation
-│   └── _layout.tsx        # Root Layout
-│
-├── services/              # API Client
-│   └── api.ts            # Backend API Integration
-│
-├── components/           # UI Components
-├── constants/           # Theme & Constants
-└── hooks/              # React Hooks
+app/
+├── (auth)/                # Authentication screens
+│   ├── sign-in.tsx       # Sign in screen
+│   └── sign-up.tsx       # Sign up with email verification
+├── (tabs)/               # Main tab navigation
+│   ├── index.tsx         # Home screen
+│   ├── transactions.tsx  # Transactions list
+│   └── profile.tsx       # User profile
+├── transaction/          # Transaction flow
+│   ├── initiate.tsx      # Start new transaction
+│   ├── scan-qr1.tsx      # Scan QR code (camera)
+│   └── scan-qr2.tsx      # Scan second QR
+└── _layout.tsx          # Root layout with Clerk provider
 ```
 
-## 📡 API Endpoints
+## Key Features
 
-The backend provides the following RESTful API endpoints:
+### Authentication Flow
+- Auto-redirect to sign-in if not authenticated
+- Email verification during sign-up
+- Secure session management with Clerk
+- Sign out with confirmation
 
-### Health Check
-- `GET /api/health` - Check API status
+### Home Screen
+- Personalized greeting with user's name
+- Quick action cards for:
+  - Initiate Transaction → Generate QR1
+  - Scan QR Code → Receive payment
+- Transaction statistics overview
 
-### Users
-- `GET /api/users` - List all users
-- `GET /api/users/:id` - Get user by ID
-- `POST /api/users` - Create user
-- `PUT /api/users/:id` - Update user
-- `DELETE /api/users/:id` - Delete user
+### Transaction Initiate
+- Amount input with decimal keyboard
+- Receiver ID field
+- Optional description
+- Form validation
+- Generate QR code functionality (TODO: API integration)
 
-### Posts
-- `GET /api/posts` - List all posts
-- `GET /api/posts/:id` - Get post by ID
-- `POST /api/posts` - Create post
-- `PATCH /api/posts/:id` - Update post
-- `DELETE /api/posts/:id` - Delete post
+### QR Scanner
+- Camera permission handling
+- Real-time QR code detection
+- Visual scan frame with corner indicators
+- Scan feedback and confirmation
+- TODO: Process scanned data with backend API
 
-## 🔧 Tech Stack
+### Profile Screen
+- User avatar with initial
+- Display name and email
+- Menu sections:
+  - Account (Edit Profile, Company Details, Security)
+  - Support (Help Center, About)
+- Sign out with confirmation dialog
+- App version display
 
-### Mobile App
-- **Framework**: Expo SDK ~54
-- **UI**: React Native 0.81.5
-- **Navigation**: Expo Router 6.0
-- **Language**: TypeScript 5.9
-- **State Management**: React Hooks
+## Next Steps (Backend Integration)
 
-### Backend
-- **Framework**: Next.js 15
-- **ORM**: Prisma 6.19
-- **Database**: PostgreSQL (Supabase)
-- **Validation**: Zod
-- **Language**: TypeScript 5.9
+1. **API Service**: Create `services/api.ts` for backend calls
+2. **Transaction API**: Connect initiate screen to `/api/transactions/initiate`
+3. **QR Processing**: Handle QR1/QR2 scan with backend validation
+4. **Transaction List**: Fetch real data from `/api/transactions`
+5. **Error Handling**: Add global error boundaries
+6. **Loading States**: Implement skeleton screens
+7. **Offline Support**: Add async storage caching
 
-## 📱 Using the API in Mobile App
+## Environment Variables
 
-```typescript
-import { userApi, postApi } from '@/services/api';
-
-// Fetch users
-const response = await userApi.getAll();
-if (response.success) {
-  console.log(response.data.users);
-}
-
-// Create a post
-const post = await postApi.create({
-  title: 'My Post',
-  content: 'Post content',
-  authorId: 'user-id',
-});
-```
-
-## 🔐 Environment Variables
-
-### Backend (.env)
+Required in `.env`:
 ```env
-DATABASE_URL="your_supabase_connection_url"
-DIRECT_URL="your_supabase_direct_url"
-PORT=3001
-ALLOWED_ORIGINS=http://localhost:8081
+EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+EXPO_PUBLIC_API_BASE_URL=http://localhost:3001
 ```
 
-### Mobile App (.env)
-```env
-EXPO_PUBLIC_API_URL=http://localhost:3001
-```
+## Testing
 
-## 📚 Documentation
+- Run on iOS Simulator for best dev experience
+- Use Android Studio emulator for Android testing
+- Physical device: Use Expo Go app or development build
 
-- **[CODE_ANALYSIS.md](./CODE_ANALYSIS.md)** - Complete code analysis and architecture
-- **[INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md)** - How to connect mobile app to backend
-- **[backend/README.md](./backend/README.md)** - Backend API documentation
+## Notes
 
-## 🛠️ Development
+- TypeScript JSX errors in IDE are expected and resolve at runtime
+- Camera permissions required for QR scanning
+- Dark theme optimized for OLED screens
+- All screens use consistent color palette
 
-### Backend Development
+## Color Scheme
 
-```bash
-cd backend
-npm run dev              # Start dev server
-npm run prisma:studio    # Open database GUI
-npm run prisma:migrate   # Run migrations
-```
-
-### Mobile Development
-
-```bash
-npm start               # Start Expo dev server
-npm run android        # Run on Android
-npm run ios           # Run on iOS
-npm run web          # Run on web
-```
-
-## 🧪 Testing
-
-### Test Backend API
-
-```bash
-# Health check
-curl http://localhost:3001/api/health
-
-# Create user
-curl -X POST http://localhost:3001/api/users \
-  -H "Content-Type: application/json" \
-  -d '{"email":"test@example.com","name":"Test User"}'
-```
-
-## 🚀 Deployment
-
-### Backend (Vercel)
-
-```bash
-cd backend
-vercel
-```
-
-### Mobile App
-
-```bash
-# Build for production
-eas build --platform all
-
-# Submit to stores
-eas submit
-```
-
-## 📖 Learn More
-
-### Expo Resources
-- [Expo documentation](https://docs.expo.dev/)
-- [Expo Router](https://docs.expo.dev/router/introduction/)
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/)
-
-### Next.js Resources
-- [Next.js documentation](https://nextjs.org/docs)
-- [Next.js API Routes](https://nextjs.org/docs/api-routes/introduction)
-- [Prisma documentation](https://www.prisma.io/docs)
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
-
-## 📄 License
-
-MIT
-
----
-
-Built with ❤️ using Expo, Next.js, and Prisma
+- Background: `#0a0e27` (Dark Navy)
+- Card Background: `#1f2937` (Gray 800)
+- Primary: `#6366f1` (Indigo)
+- Success: `#10b981` (Green)
+- Error: `#ef4444` (Red)
+- Text: `#ffffff` / `#9ca3af`

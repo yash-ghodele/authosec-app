@@ -1,98 +1,247 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { useState, useEffect } from 'react';
+import { onAuthChange, User } from '@/services/auth';
+import { useRouter } from 'expo-router';
+import { IconSymbol } from '@/components/ui/icon-symbol';
+import { AnimatedCard, FadeInView } from '@/components/animated';
+import { AuthoSecLogo } from '@/components/logo';
+import { brandColors, spacing, typography } from '@/constants/brand';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  useEffect(() => {
+    const unsubscribe = onAuthChange((authUser) => {
+      setUser(authUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  return (
+    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+      {/* Header with Logo */}
+      <FadeInView delay={0}>
+        <View style={styles.header}>
+          <View style={styles.logoContainer}>
+            <AuthoSecLogo size={50} showText={false} />
+            <View style={styles.brandText}>
+              <Text style={styles.brandName}>AuthoSec</Text>
+              <Text style={styles.brandTagline}>Secure Transactions</Text>
+            </View>
+          </View>
+          
+          <View style={styles.greeting}>
+            <Text style={styles.greetingText}>Welcome back,</Text>
+            <Text style={styles.userName}>{user?.displayName || user?.email || 'User'}</Text>
+          </View>
+        </View>
+      </FadeInView>
+
+      {/* Quick Actions */}
+      <FadeInView delay={100}>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Quick Actions</Text>
+          
+          <AnimatedCard
+            variant="primary"
+            onPress={() => router.push('/transaction/initiate')}
+            style={styles.actionCard}
+          >
+            <View style={styles.actionCardContent}>
+              <View style={[styles.iconContainer, styles.primaryIcon]}>
+                <IconSymbol size={28} name="qrcode" color="#fff" />
+              </View>
+              <View style={styles.actionText}>
+                <Text style={styles.actionTitle}>Initiate Transaction</Text>
+                <Text style={styles.actionSubtitle}>Start a new secure payment</Text>
+              </View>
+              <IconSymbol size={20} name="chevron.right" color={brandColors.light[400]} />
+            </View>
+          </AnimatedCard>
+
+          <AnimatedCard
+            variant="success"
+            onPress={() => router.push('/transaction/scan-qr1')}
+            style={styles.actionCard}
+          >
+            <View style={styles.actionCardContent}>
+              <View style={[styles.iconContainer, styles.successIcon]}>
+                <IconSymbol size={28} name="camera.fill" color="#fff" />
+              </View>
+              <View style={styles.actionText}>
+                <Text style={styles.actionTitle}>Scan QR Code</Text>
+                <Text style={styles.actionSubtitle}>Receive payment</Text>
+              </View>
+              <IconSymbol size={20} name="chevron.right" color={brandColors.light[400]} />
+            </View>
+          </AnimatedCard>
+        </View>
+      </FadeInView>
+
+      {/* Stats Overview */}
+      <FadeInView delay={200}>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Overview</Text>
+          
+          <View style={styles.statsGrid}>
+            <AnimatedCard style={styles.statCard}>
+              <Text style={styles.statValue}>0</Text>
+              <Text style={styles.statLabel}>Pending</Text>
+              <View style={styles.statIndicator} />
+            </AnimatedCard>
+            
+            <AnimatedCard style={styles.statCard}>
+              <Text style={[styles.statValue, styles.successValue]}>0</Text>
+              <Text style={styles.statLabel}>Completed</Text>
+              <View style={[styles.statIndicator, styles.successIndicator]} />
+            </AnimatedCard>
+          </View>
+        </View>
+      </FadeInView>
+
+      {/* Recent Activity Placeholder */}
+      <FadeInView delay={300}>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Recent Activity</Text>
+          <AnimatedCard style={styles.emptyState}>
+            <IconSymbol size={48} name="tray" color={brandColors.light[400]} />
+            <Text style={styles.emptyStateText}>No recent transactions</Text>
+            <Text style={styles.emptyStateSubtext}>Your transactions will appear here</Text>
+          </AnimatedCard>
+        </View>
+      </FadeInView>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+    backgroundColor: brandColors.light[100],
+  },
+  contentContainer: {
+    paddingBottom: spacing['3xl'],
+  },
+  header: {
+    padding: spacing.xl,
+    paddingTop: 60,
+    backgroundColor: brandColors.light[50],
+  },
+  logoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    marginBottom: spacing.xl,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  brandText: {
+    marginLeft: spacing.md,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  brandName: {
+    ...typography.h3,
+    color: brandColors.light[950],
+  },
+  brandTagline: {
+    ...typography.caption,
+    color: brandColors.light[600],
+  },
+  greeting: {
+    marginTop: spacing.lg,
+  },
+  greetingText: {
+    ...typography.body,
+    color: brandColors.light[600],
+  },
+  userName: {
+    ...typography.h2,
+    color: brandColors.light[900],
+    marginTop: spacing.xs,
+  },
+  section: {
+    paddingHorizontal: spacing.xl,
+    marginBottom: spacing.xl,
+  },
+  sectionTitle: {
+    ...typography.h4,
+    color: brandColors.light[900],
+    marginBottom: spacing.lg,
+  },
+  actionCard: {
+    marginBottom: spacing.md,
+  },
+  actionCardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: spacing.md,
+  },
+  primaryIcon: {
+    backgroundColor: brandColors.primary[600],
+  },
+  successIcon: {
+    backgroundColor: brandColors.success[600],
+  },
+  actionText: {
+    flex: 1,
+  },
+  actionTitle: {
+    ...typography.body,
+    fontWeight: '600',
+    color: brandColors.light[900],
+    marginBottom: spacing.xs,
+  },
+  actionSubtitle: {
+    ...typography.caption,
+    color: brandColors.light[600],
+  },
+  statsGrid: {
+    flexDirection: 'row',
+    gap: spacing.md,
+  },
+  statCard: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: spacing.xl,
+  },
+  statValue: {
+    ...typography.h1,
+    color: brandColors.primary[600],
+    marginBottom: spacing.xs,
+  },
+  successValue: {
+    color: brandColors.success[600],
+  },
+  statLabel: {
+    ...typography.caption,
+    color: brandColors.light[600],
+  },
+  statIndicator: {
+    width: 32,
+    height: 3,
+    backgroundColor: brandColors.primary[500],
+    borderRadius: 2,
+    marginTop: spacing.sm,
+  },
+  successIndicator: {
+    backgroundColor: brandColors.success[500],
+  },
+  emptyState: {
+    alignItems: 'center',
+    paddingVertical: spacing['3xl'],
+  },
+  emptyStateText: {
+    ...typography.body,
+    color: brandColors.light[700],
+    marginTop: spacing.lg,
+  },
+  emptyStateSubtext: {
+    ...typography.caption,
+    color: brandColors.light[500],
+    marginTop: spacing.xs,
   },
 });
