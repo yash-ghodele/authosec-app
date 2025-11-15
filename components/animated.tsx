@@ -148,20 +148,20 @@ export function FadeInView({ children, delay = 0, duration = 600 }: FadeInViewPr
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
     borderRadius: borderRadius.lg,
     padding: spacing.lg,
     borderWidth: 1,
-    borderColor: brandColors.light[300],
+    borderColor: 'rgba(255, 255, 255, 0.1)',
     ...shadows.md,
   },
   primaryCard: {
     borderColor: brandColors.primary[500],
-    backgroundColor: brandColors.primary[50],
+    backgroundColor: `${brandColors.primary[500]}20`,
   },
   successCard: {
     borderColor: brandColors.success[500],
-    backgroundColor: '#ecfdf5',
+    backgroundColor: `${brandColors.success[500]}20`,
   },
   pressable: {
     width: '100%',
@@ -179,9 +179,9 @@ const styles = StyleSheet.create({
     backgroundColor: brandColors.primary[600],
   },
   secondaryButton: {
-    backgroundColor: brandColors.light[200],
+    backgroundColor: brandColors.dark[700],
     borderWidth: 1,
-    borderColor: brandColors.light[300],
+    borderColor: brandColors.dark[600],
   },
   successButton: {
     backgroundColor: brandColors.success[600],
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   disabledText: {
-    color: brandColors.light[500],
+    color: brandColors.dark[500],
   },
   icon: {
     marginRight: spacing.sm,

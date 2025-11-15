@@ -1,19 +1,28 @@
 /**
- * AuthoSec Brand Colors - Matching Website Theme
+ * AuthoSec Brand Colors - Matching Website Dark Theme
  */
 export const brandColors = {
-  // Primary Orange (matching website)
+  // Primary Orange (Firebase orange - matching website)
   primary: {
-    50: '#fff7ed',
-    100: '#ffedd5',
-    200: '#fed7aa',
-    300: '#fdba74',
-    400: '#fb923c',
-    500: '#f97316',
-    600: '#ea580c',
-    700: '#c2410c',
-    800: '#9a3412',
-    900: '#7c2d12',
+    50: '#fef3e7',
+    100: '#fde0bc',
+    200: '#fccc91',
+    300: '#fbb866',
+    400: '#faa43b',
+    500: '#f9ab00',
+    600: '#e09100',
+    700: '#c77700',
+    800: '#ae5d00',
+    900: '#954300',
+  },
+  
+  // Firebase Colors
+  firebase: {
+    orange: '#f9ab00',
+    yellow: '#ffca28',
+    blue: '#039be5',
+    navy: '#1a237e',
+    purple: '#4a148c',
   },
   
   // Success Green
@@ -34,7 +43,21 @@ export const brandColors = {
     600: '#dc2626',
   },
   
-  // Light Theme
+  // Dark Theme (matching website)
+  dark: {
+    50: '#f5f5f5',
+    100: '#e8eaed',
+    200: '#dadce0',
+    300: '#bdc1c6',
+    400: '#9aa0a6',
+    500: '#5f6368',
+    600: '#3c4043',
+    700: '#303134',
+    800: '#202124',
+    900: '#171717',
+  },
+  
+  // Light Theme (for text on dark backgrounds)
   light: {
     50: '#ffffff',
     100: '#fafafa',
@@ -47,12 +70,6 @@ export const brandColors = {
     800: '#404040',
     900: '#262626',
     950: '#171717',
-  },
-  
-  // Dark backgrounds for specific elements
-  dark: {
-    800: '#1a1a1a',
-    900: '#0f0f0f',
   },
 };
 
@@ -141,4 +158,35 @@ export const typography = {
     fontWeight: '400' as const,
     lineHeight: 16,
   },
+};
+
+// Gradient utilities
+export const gradients = {
+  firebase: ['#f9ab00', '#ffca28'],
+  firebaseDark: ['#1a237e', '#4a148c'],
+  primary: ['#f9ab00', '#ffca28'],
+  dark: ['#202124', '#171717'],
+};
+
+// Animation constants (matching website)
+export const animations = {
+  fadeIn: {
+    duration: 500,
+    easing: 'ease-in',
+  },
+  slideUp: {
+    duration: 500,
+    easing: 'ease-out',
+  },
+  slideDown: {
+    duration: 300,
+    easing: 'ease-out',
+  },
+};
+
+// Glass effect style (for cards)
+export const glassEffect = {
+  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+  borderWidth: 1,
+  borderColor: 'rgba(255, 255, 255, 0.1)',
 };
