@@ -55,7 +55,7 @@ export default {
       EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY,
       EXPO_PUBLIC_API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL,
       eas: {
-        projectId: "your-project-id"
+        projectId: "4c762ba2-af57-4319-ad4c-2da80dedbac6"
       }
     }
   }
