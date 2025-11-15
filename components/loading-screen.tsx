@@ -18,7 +18,7 @@ export function LoadingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: brandColors.light[50],
+    backgroundColor: brandColors.dark[900],
     alignItems: 'center',
     justifyContent: 'center',
   },

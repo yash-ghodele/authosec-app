@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { signIn } from '@/services/auth';
 import { Link, useRouter } from 'expo-router';
+import { AuthoSecLogo } from '@/components/logo';
+import { brandColors, spacing, typography, borderRadius, shadows } from '@/constants/brand';
 
 export default function SignIn() {
   const router = useRouter();
@@ -26,46 +28,73 @@ export default function SignIn() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
-      <View style={styles.content}>
-        <Text style={styles.title}>Welcome Back</Text>
-        <Text style={styles.subtitle}>Sign in to AuthoSec</Text>
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.content}>
+          {/* Logo */}
+          <View style={styles.logoContainer}>
+            <AuthoSecLogo size={80} showText={true} />
+          </View>
 
-        <TextInput
-          autoCapitalize="none"
-          value={emailAddress}
-          placeholder="Email"
-          onChangeText={setEmailAddress}
-          style={styles.input}
-          keyboardType="email-address"
-        />
+          <Text style={styles.title}>Welcome Back</Text>
+          <Text style={styles.subtitle}>Sign in to AuthoSec</Text>
 
-        <TextInput
-          value={password}
-          placeholder="Password"
-          secureTextEntry
-          onChangeText={setPassword}
-          style={styles.input}
-        />
+          <TextInput
+            autoCapitalize="none"
+            value={emailAddress}
+            placeholder="Email"
+            placeholderTextColor={brandColors.light[500]}
+            onChangeText={setEmailAddress}
+            style={styles.input}
+            keyboardType="email-address"
+          />
 
-        <TouchableOpacity
-          style={[styles.button, loading && styles.buttonDisabled]}
-          onPress={onSignInPress}
-          disabled={loading}
-        >
-          <Text style={styles.buttonText}>
-            {loading ? 'Signing In...' : 'Sign In'}
-          </Text>
-        </TouchableOpacity>
+          <TextInput
+            value={password}
+            placeholder="Password"
+            placeholderTextColor={brandColors.light[500]}
+            secureTextEntry
+            onChangeText={setPassword}
+            style={styles.input}
+          />
 
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>Don't have an account? </Text>
-          <Link href="/(auth)/sign-up" asChild>
-            <TouchableOpacity>
-              <Text style={styles.link}>Sign Up</Text>
-            </TouchableOpacity>
-          </Link>
+          <TouchableOpacity
+            style={[styles.button, loading && styles.buttonDisabled]}
+            onPress={onSignInPress}
+            disabled={loading}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.buttonText}>
+              {loading ? 'Signing In...' : 'Sign In'}
+            </Text>
+          </TouchableOpacity>
+
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>Don't have an account? </Text>
+            <Link href="/(auth)/sign-up" asChild>
+              <TouchableOpacity>
+                <Text style={styles.link}>Sign Up</Text>
+              </TouchableOpacity>
+            </Link>
+          </View>
+
+          <View style={styles.divider}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>OR</Text>
+            <View style={styles.dividerLine} />
+          </View>
+
+          <TouchableOpacity
+            style={styles.phoneButton}
+            onPress={() => router.push('/(auth)/phone-signin')}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.phoneButtonText}>Login with Phone Number (Accountant)</Text>
+          </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
@@ -73,61 +102,102 @@ export default function SignIn() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a0e27',
+    backgroundColor: '#FFFFFF',
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
   content: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing['3xl'],
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: spacing['2xl'],
   },
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 8,
+    ...typography.h1,
+    color: brandColors.light[900],
+    marginBottom: spacing.sm,
+    textAlign: 'center',
   },
   subtitle: {
-    fontSize: 16,
-    color: '#9ca3af',
-    marginBottom: 32,
+    ...typography.body,
+    color: brandColors.light[600],
+    marginBottom: spacing['2xl'],
+    textAlign: 'center',
   },
   input: {
-    backgroundColor: '#1f2937',
-    borderRadius: 8,
-    padding: 16,
+    backgroundColor: brandColors.light[100],
+    borderRadius: borderRadius.md,
+    padding: spacing.lg,
     fontSize: 16,
-    color: '#fff',
-    marginBottom: 16,
+    color: brandColors.light[900],
+    marginBottom: spacing.md,
     borderWidth: 1,
-    borderColor: '#374151',
+    borderColor: brandColors.light[300],
+    ...shadows.sm,
   },
   button: {
-    backgroundColor: '#6366f1',
-    borderRadius: 8,
-    padding: 16,
+    backgroundColor: brandColors.primary[600],
+    borderRadius: borderRadius.md,
+    padding: spacing.lg,
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: spacing.md,
+    ...shadows.md,
   },
   buttonDisabled: {
     opacity: 0.6,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 16,
+    color: '#FFFFFF',
+    ...typography.body,
     fontWeight: '600',
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 24,
+    marginTop: spacing.xl,
   },
   footerText: {
-    color: '#9ca3af',
-    fontSize: 14,
+    color: brandColors.light[600],
+    ...typography.caption,
   },
   link: {
-    color: '#6366f1',
-    fontSize: 14,
+    color: brandColors.primary[600],
+    ...typography.caption,
+    fontWeight: '600',
+  },
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: spacing.xl,
+    marginBottom: spacing.lg,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: brandColors.light[300],
+  },
+  dividerText: {
+    color: brandColors.light[500],
+    ...typography.caption,
+    paddingHorizontal: spacing.md,
+  },
+  phoneButton: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: borderRadius.md,
+    padding: spacing.lg,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: brandColors.primary[500],
+    ...shadows.sm,
+  },
+  phoneButtonText: {
+    color: brandColors.primary[600],
+    ...typography.body,
     fontWeight: '600',
   },
 });

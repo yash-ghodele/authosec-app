@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { onAuthChange, signOut as firebaseSignOut, User } from '@/services/auth';
 import { useRouter } from 'expo-router';
 import { IconSymbol } from '@/components/ui/icon-symbol';
-import { AnimatedCard, FadeInView } from '@/components/animated';
 import { brandColors, spacing, typography, borderRadius, shadows } from '@/constants/brand';
 
 export default function ProfileScreen() {
@@ -37,7 +36,13 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView style={styles.container}>
+      {/* Header */}
       <View style={styles.header}>
+        <Text style={styles.title}>Profile</Text>
+      </View>
+
+      {/* Profile Info */}
+      <View style={styles.profileSection}>
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>
             {user?.displayName?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'}
@@ -47,34 +52,44 @@ export default function ProfileScreen() {
           {user?.displayName || 'User'}
         </Text>
         <Text style={styles.email}>
-          {user?.email}
+          {user?.email || user?.phoneNumber || 'No email'}
         </Text>
       </View>
 
+      {/* Menu Items */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Account</Text>
         
-        <TouchableOpacity style={styles.menuItem}>
-          <View style={styles.menuIconContainer}>
-            <IconSymbol size={24} name="person.fill" color={brandColors.primary[600]} />
+        <TouchableOpacity 
+          style={styles.menuItem}
+          onPress={() => router.push('/(tabs)/settings')}
+        >
+          <View style={styles.menuItemContent}>
+            <View style={styles.menuIconContainer}>
+              <IconSymbol size={24} name="person.fill" color={brandColors.primary[500]} />
+            </View>
+            <Text style={styles.menuText}>Edit Profile</Text>
           </View>
-          <Text style={styles.menuText}>Edit Profile</Text>
           <IconSymbol size={20} name="chevron.right" color={brandColors.light[400]} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <View style={styles.menuIconContainer}>
-            <IconSymbol size={24} name="building.2.fill" color={brandColors.primary[600]} />
+          <View style={styles.menuItemContent}>
+            <View style={styles.menuIconContainer}>
+              <IconSymbol size={24} name="building.2.fill" color={brandColors.primary[500]} />
+            </View>
+            <Text style={styles.menuText}>Company Details</Text>
           </View>
-          <Text style={styles.menuText}>Company Details</Text>
           <IconSymbol size={20} name="chevron.right" color={brandColors.light[400]} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <View style={styles.menuIconContainer}>
-            <IconSymbol size={24} name="shield.fill" color={brandColors.primary[600]} />
+          <View style={styles.menuItemContent}>
+            <View style={styles.menuIconContainer}>
+              <IconSymbol size={24} name="shield.fill" color={brandColors.primary[500]} />
+            </View>
+            <Text style={styles.menuText}>Security</Text>
           </View>
-          <Text style={styles.menuText}>Security</Text>
           <IconSymbol size={20} name="chevron.right" color={brandColors.light[400]} />
         </TouchableOpacity>
       </View>
@@ -83,18 +98,22 @@ export default function ProfileScreen() {
         <Text style={styles.sectionTitle}>Support</Text>
         
         <TouchableOpacity style={styles.menuItem}>
-          <View style={styles.menuIconContainer}>
-            <IconSymbol size={24} name="questionmark.circle.fill" color={brandColors.primary[600]} />
+          <View style={styles.menuItemContent}>
+            <View style={styles.menuIconContainer}>
+              <IconSymbol size={24} name="questionmark.circle.fill" color={brandColors.primary[500]} />
+            </View>
+            <Text style={styles.menuText}>Help Center</Text>
           </View>
-          <Text style={styles.menuText}>Help Center</Text>
           <IconSymbol size={20} name="chevron.right" color={brandColors.light[400]} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <View style={styles.menuIconContainer}>
-            <IconSymbol size={24} name="info.circle.fill" color={brandColors.primary[600]} />
+          <View style={styles.menuItemContent}>
+            <View style={styles.menuIconContainer}>
+              <IconSymbol size={24} name="info.circle.fill" color={brandColors.primary[500]} />
+            </View>
+            <Text style={styles.menuText}>About</Text>
           </View>
-          <Text style={styles.menuText}>About</Text>
           <IconSymbol size={20} name="chevron.right" color={brandColors.light[400]} />
         </TouchableOpacity>
       </View>
@@ -114,13 +133,26 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: brandColors.light[100],
+    backgroundColor: '#FFFFFF',
   },
   header: {
-    alignItems: 'center',
     padding: spacing.xl,
     paddingTop: 60,
-    backgroundColor: brandColors.light[50],
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: brandColors.light[200],
+  },
+  title: {
+    ...typography.h1,
+    color: brandColors.light[900],
+  },
+  profileSection: {
+    alignItems: 'center',
+    padding: spacing.xl,
+    paddingTop: spacing['2xl'],
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: brandColors.light[200],
   },
   avatar: {
     width: 80,
@@ -153,7 +185,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     ...typography.small,
     fontWeight: '600',
-    color: brandColors.light[600],
+    color: brandColors.light[500],
     marginBottom: spacing.md,
     textTransform: 'uppercase',
     letterSpacing: 1,
@@ -161,19 +193,25 @@ const styles = StyleSheet.create({
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
-    borderRadius: borderRadius.lg,
+    justifyContent: 'space-between',
     padding: spacing.lg,
+    borderRadius: borderRadius.lg,
     marginBottom: spacing.sm,
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: brandColors.light[300],
     ...shadows.sm,
+  },
+  menuItemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
   },
   menuIconContainer: {
     width: 40,
     height: 40,
     borderRadius: 10,
-    backgroundColor: brandColors.primary[50],
+    backgroundColor: `${brandColors.primary[500]}15`,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: spacing.md,
@@ -187,7 +225,7 @@ const styles = StyleSheet.create({
   signOutButton: {
     margin: spacing.xl,
     marginTop: spacing.sm,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#FFFFFF',
     borderRadius: borderRadius.lg,
     padding: spacing.lg,
     alignItems: 'center',

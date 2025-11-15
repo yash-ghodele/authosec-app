@@ -6,7 +6,7 @@ export default {
     slug: "authosec-app",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/images/icon.png",
+    icon: "./assets/images/ChatGPT Image Nov 14, 2025, 01_39_54 PM.png",
     scheme: "authosec",
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
@@ -19,7 +19,7 @@ export default {
     },
     android: {
       adaptiveIcon: {
-        foregroundImage: "./assets/images/adaptive-icon.png",
+        foregroundImage: "./assets/images/ChatGPT Image Nov 14, 2025, 01_39_54 PM.png",
         backgroundColor: "#ffffff"
       },
       package: "com.authosec.app",
@@ -35,7 +35,7 @@ export default {
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/ChatGPT Image Nov 14, 2025, 01_39_54 PM.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"

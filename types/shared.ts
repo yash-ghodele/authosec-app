@@ -166,3 +166,20 @@ export interface VerifyOTPRequest {
   phone: string;
   otp: string;
 }
+
+// ============================================
+// DASHBOARD TYPES
+// ============================================
+
+export interface DashboardStats {
+  pending: number;
+  completed: number;
+  totalAmount: number;
+  thisMonth: number;
+  recentTransactions: Transaction[];
+}
+
+export interface UserDashboardData {
+  stats: DashboardStats;
+  user: UserProfile;
+}
