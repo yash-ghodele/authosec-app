@@ -1,15 +1,17 @@
-import 'dotenv/config';
-
 export default {
   expo: {
-    name: "authosec-app",
+    name: "AuthoSec",
     slug: "authosec-app",
     version: "1.0.0",
     orientation: "portrait",
     icon: "./assets/images/ChatGPT Image Nov 14, 2025, 01_39_54 PM.png",
     scheme: "authosec",
     userInterfaceStyle: "automatic",
-    newArchEnabled: true,
+    splash: {
+      image: "./assets/images/ChatGPT Image Nov 14, 2025, 01_39_54 PM.png",
+      resizeMode: "contain",
+      backgroundColor: "#ffffff"
+    },
     ios: {
       supportsTablet: true,
       bundleIdentifier: "com.authosec.app",
@@ -33,18 +35,9 @@ export default {
     plugins: [
       "expo-router",
       [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/ChatGPT Image Nov 14, 2025, 01_39_54 PM.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
-        }
-      ],
-      [
         "expo-camera",
         {
-          "cameraPermission": "Allow AuthoSec to access your camera to scan QR codes."
+          "cameraPermission": "Allow AuthoSec to access your camera to scan QR codes for secure transactions."
         }
       ]
     ],
@@ -52,10 +45,8 @@ export default {
       typedRoutes: true
     },
     extra: {
-      EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY,
-      EXPO_PUBLIC_API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL,
       eas: {
-        projectId: "your-project-id"
+        projectId: "4c762ba2-af57-4319-ad4c-2da80dedbac6"
       }
     }
   }
